@@ -1,6 +1,7 @@
 import java.lang.StringBuilder
 import java.util.*
-import kotlin.random.Random.*
+import kotlin.collections.ArrayList
+import kotlin.random.Random.Default.nextInt
 
 fun main(args: Array<String>) {
     println("1. String template -----------------")
@@ -38,28 +39,22 @@ fun main(args: Array<String>) {
 
     println("5.  Even numbers from a list -------------------")
     val list2 = listOf(5,16,9,3,67,24,54,1)
-    val evenNumb = list2.filter{number -> number.exercise5() == 0}
+
+    val evenNumb = list2.exercise5()
     println("$list2 -> $evenNumb")
 
     println("\n6.  days of the week + map() -------------------")
-    val elements = listOf(6, 9, "Monday", "Sunday", 32)
-    print("The elements of a list of integers *2: ")
-    elements.map{
-        if(it is Int)
-        {
-            print("${it*2}, ")
-        }
-    }
-    println("The elements of a list of integers *2: ")
+    print("The elements of a list of integers *2:\n\t")
+    print("$list2 -> ")
     list2.map{print("${it*2}, ")}
 
-    println("\nThe days of week capitalized: ")
-    list.map{print("\t${it.uppercase()}, ")}
+    print("\nThe days of week capitalized:\n\t")
+    list.map{print("${it.uppercase()}, ")}
 
-    println("\nThe first character of each day capitalized: ")
-    list.map{print("${it.lowercase().first()}, ")}
+    print("\nThe first character of each day capitalized:\n\t")
+    list.map{print("${it.lowercase().first()} for $it, ")}
 
-    println("\nThe length of days: ")
+    print("\nThe length of days:\n\t")
     list.map{print("$it -> ${it.length}, ")}
 
     print("\nThe average length of days: ")
@@ -68,31 +63,52 @@ fun main(args: Array<String>) {
     println(sum/7.0)
 
 
-
     println("\n7. exercises with daysOfWeek -------------------------")
-    list.toMutableList()
-    list.filter { day -> day.contains('n')}
+    val list3 = list.toMutableList()
+    val list4 = list3.filter { day -> day.contains('n')}
+    list3 -= list4
+    println("Each day that doesn't contain the letter \"n\": $list3")
+
+    for ((index, value) in list3.withIndex()) {
+        println("Item at $index is $value")
+    }
+
+    list3.sort()
+    println("The sorted list: $list3")
 
 
     println("\n8. exercises with random integers --------------------")
-    val randList = mutableListOf<Int>()
+    val randArrayList = arrayListOf<Int>()
     for(i in 1..10)
     {
-        randList.add((0..100).random())
+        randArrayList.add((0..100).random())
     }
 
-    randList.forEach{
+    println("The random list: ")
+    randArrayList.forEach{
         println("$it")
     }
 
-    randList.sort()
-    println("The sorted list is: $randList")
+    randArrayList.sort()
+    println("The sorted list is: $randArrayList")
 
+    when (randArrayList.exercise8_1())
+    {
+        true -> println("The array contains any even number.")
+        else -> println("The array doesn't contain any even number.")
+    }
 
+    when (randArrayList.exercise8_2())
+    {
+        true -> println("All numbers are even.")
+        else -> println("Not all numbers are even.")
+    }
 
-
-    // Try adding program arguments at Run/Debug configuration
-    println("Program arguments: ${args.joinToString()}")
+    var avg = 0
+    randArrayList.forEach{
+        avg += it
+    }
+    println("The average of generated numbers: ${avg/10.0}")
 }
 
 //1. feladat: String Template
@@ -102,7 +118,7 @@ fun exercise1(a: Int,b: Int) {
 
 //2. feladat: a hét napjai - lista
 fun exercise2(list: List<String>) {
-
+    print("The days of the week: ")
     for(day in list)
     {
         print("$day ")
@@ -161,7 +177,7 @@ fun String.decode() :String{
     return sb.toString()
 }
 
-//mas fajta parameterezessel
+//mas fajta parameterezessel es szaballyal
 fun encode2(msg:String) :String{
     val sb = StringBuilder(msg.length)
     for (c in msg)
@@ -186,22 +202,27 @@ fun messageCoding(msg: String, func: (String) -> String): String {
     return func(msg)
 }
 
-//5. paros szam - kompakt fuggveny
-fun Int.exercise5():Int = this % 2
+fun List<Int>.exercise5() = this.filter{number -> number%2 == 0}
 
-//7. het napjai ~ immutable list
-fun exercise7(list: List<String>) {
-    val listNew = list.toMutableList()
-
-    for (i in listNew)
-    {
-        if(i.contains('n'))
+//8. random szamokkal
+fun ArrayList<Int>.exercise8_1() : Boolean {
+    this.forEach{
+        if(it % 2 == 0)
         {
-            listNew.remove(i)
+            return true
         }
     }
 
-    //println("If you remove all days containing the letter 'n': $listNew")
+    return false
 }
 
-//8. random szamok generalasa
+fun ArrayList<Int>.exercise8_2() : Boolean {
+    this.forEach{
+        if(it % 2 != 0)
+        {
+            return false
+        }
+    }
+
+    return true
+}
